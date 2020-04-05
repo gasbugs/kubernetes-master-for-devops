@@ -1,0 +1,27 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: dev1
+  name: deployment-manager
+rules:
+- apiGroups: ["", "apps"] # "" indicates the core API group
+  resources: ["pods", "replicasets", "deployments", "secrets"]
+  verbs: ["get", "watch", "list", "create", "update", "patch", "delete"]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: deployment-manager
+  namespace: dev1
+subjects:
+# You can specify more than one "subject"
+- kind: User
+  name: john # "name" is case sensitive
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  # "roleRef" specifies the binding to a Role / ClusterRole
+  kind: Role #this must be Role or ClusterRole
+  name: deployment-manager # this must match the name of the Role or ClusterRole you wish to bind to
+  apiGroup: rbac.authorization.k8s.io

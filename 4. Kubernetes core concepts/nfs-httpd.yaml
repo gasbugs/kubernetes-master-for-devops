@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nfs-httpd
+spec:
+  containers:
+  - image: httpd
+    name: web
+    volumeMounts:
+    - mountPath: /usr/local/apache2/htdocs
+      name: nfs-volume
+      readOnly: true
+  volumes:
+  - name:  nfs-volume
+    nfs:
+      server: 10.0.2.5
+      path: /home/nfs

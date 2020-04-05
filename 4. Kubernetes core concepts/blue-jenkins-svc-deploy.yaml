@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: blue
+spec: {}
+status: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    run: pod-jenkins
+  name: pod-jenkins
+  namespace: blue
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: pod-jenkins
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: pod-jenkins
+    spec:
+      containers:
+      - image: jenkins
+        name: pod-jenkins
+        ports:
+        - containerPort: 8080
+        resources: {}
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    run: pod-jenkins
+  name: srv-jenkins
+  namespace: blue
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    run: pod-jenkins
+status:
+  loadBalancer: {}
