@@ -1,0 +1,14 @@
+server:
+  enabled: true
+
+  persistentVolume:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    mountPath: /data
+    size: 100Gi
+  replicaCount: 1
+
+  ## Prometheus data retention period (default if not specified is 15 days)
+  ##
+  retention: "15d"

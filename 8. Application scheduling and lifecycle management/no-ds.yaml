@@ -1,0 +1,17 @@
+# no-ds.yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: no-ds
+spec:
+  selector:
+    matchLabels:
+      app: no-ds
+  template:
+    metadata:
+      labels:
+        app: no-ds
+    spec:
+      containers:
+      - name: nx
+        image: nginx

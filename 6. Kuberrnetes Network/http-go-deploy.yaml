@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: http-go-svc
+spec:
+  selector:
+    run: http-go
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    run: http-go
+  name: http-go
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: http-go
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: http-go
+    spec:
+      containers:
+      - image: gasbugs/http-go
+        name: http-go
+        ports:
+        - containerPort: 8080
+        resources: {}
+status: {}

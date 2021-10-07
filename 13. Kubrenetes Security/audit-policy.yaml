@@ -1,0 +1,67 @@
+apiVersion: audit.k8s.io/v1 # This is required.
+kind: Policy
+# RequestReceived 단계의 모든 요청에 ​​대해 감사 이벤트를 생성하지 말아야 한다.
+omitStages:
+  - "RequestReceived"
+rules:
+  # RequestResponse 수준에서 포드 변경 사항 기록
+  - level: RequestResponse
+    resources:
+    - group: ""
+      # 리소스 "포드"는 RBAC 정책과 일치하는 포드의 하위 리소스에 대한 요청과 일치하지 않습니다.
+      resources: ["pods"]
+  # 메타데이터 수준에서 "pods/log", "pods/status"를 기록합니다.
+  - level: Metadata
+    resources:
+    - group: ""
+      resources: ["pods/log", "pods/status"]
+
+  # "controller-leader"라는 configmap에 요청을 기록하지 마십시오.
+  - level: None
+    resources:
+    - group: ""
+      resources: ["configmaps"]
+      resourceNames: ["controller-leader"]
+
+  # 엔드포인트 또는 서비스에서 "system:kube-proxy"에 의한 감시 요청을 기록하지 마십시오.
+  - level: None
+    users: ["system:kube-proxy"]
+    verbs: ["watch"]
+    resources:
+    - group: "" # core API group
+      resources: ["endpoints", "services"]
+
+  # 리소스가 아닌 특정 URL 경로에 인증된 요청을 기록하지 마세요.
+  - level: None
+    userGroups: ["system:authenticated"]
+    nonResourceURLs:
+    - "/api*" # Wildcard matching.
+    - "/version"
+
+  # kube-system에서 configmap 변경 사항의 요청 본문을 기록합니다.
+  - level: Request
+    resources:
+    - group: "" # core API group
+      resources: ["configmaps"]
+    # 이 규칙은 "kube-system" 네임스페이스의 리소스에만 적용됩니다.
+    # 빈 문자열 ""을 사용하여 네임스페이스가 없는 리소스를 선택할 수 있습니다.
+    namespaces: ["kube-system"]
+
+  # 메타데이터 수준에서 다른 모든 네임스페이스의 configmap 및 비밀 변경 사항을 기록합니다.
+  - level: Metadata
+    resources:
+    - group: "" # core API group
+      resources: ["secrets", "configmaps"]
+
+  # 요청 수준에서 코어 및 확장의 다른 모든 리소스를 기록합니다.
+  - level: Request
+    resources:
+    - group: "" # core API group
+    - group: "extensions" # Version of group should NOT be included.
+
+  # 메타데이터 수준에서 다른 모든 요청을 기록하는 포괄 규칙입니다.
+  - level: Metadata
+    # Long-running requests like watches that fall under this rule will not
+    # generate an audit event in RequestReceived.
+    omitStages:
+      - "RequestReceived"

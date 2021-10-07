@@ -1,0 +1,25 @@
+# toleration-ds.yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: toleration-ds
+spec:
+  selector:
+    matchLabels:
+      app: toleration-ds
+  template:
+    metadata:
+      labels:
+        app: toleration-ds
+    spec:
+      containers:
+      - name: nx
+        image: nginx
+      tolerations:
+      - key: "node-role.kubernetes.io/master"
+        operator: "Exists"
+        effect: "NoSchedule"
+      - key: "key1"
+        operator: "Equal"
+        value: "value1"
+        effect: "NoExecute"

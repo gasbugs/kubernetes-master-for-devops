@@ -1,0 +1,9 @@
+apiVersion: apps/v1
+kind: Pod
+metadata:
+  name: http-go
+spec:
+  containers:
+  - name: http-go
+    image: busybox
+  nodeName: work1

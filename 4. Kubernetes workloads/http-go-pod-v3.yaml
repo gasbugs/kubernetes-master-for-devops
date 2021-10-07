@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+name: http-go-v3
+labels:
+creation_method: manual-v3
+spec:
+containers:
+
+- name: http-go
+image: gasbugs/http-go
+ports:
+    - containerPort: 8080
+      protocol: TCP

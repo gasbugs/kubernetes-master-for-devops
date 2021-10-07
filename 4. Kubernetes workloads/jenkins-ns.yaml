@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ns-jenkins
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: jenkins
+  namespace: ns-jenkins
+spec:
+  containers:
+  - name: jenkins
+    image: jenkins
+    ports:    
+    - containerPort: 8080

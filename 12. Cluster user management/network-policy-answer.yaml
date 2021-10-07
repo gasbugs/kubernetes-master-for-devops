@@ -1,0 +1,51 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: http-go-v1-ingress
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: http-go-v1
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: default
+    - podSelector:
+        matchLabels:
+          app: http-go-v2
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: http-go-v2-ingress
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: http-go-v2
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: other
+    - podSelector:
+        matchLabels:
+          app: http-go-v3
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: http-go-v3-ingress
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: http-go-v3
+  policyTypes:
+  - Ingress
